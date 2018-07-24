@@ -144,7 +144,7 @@ urlsafe_base64(){
 ss_link_qr(){
 	SSbase64=$(urlsafe_base64 "${method}:${password}@${ip}:${port}")
 	SSurl="ss://${SSbase64}"
-	SSQRcode="http://zheyu.pw/qr/qr.php?text=${SSurl}"
+	SSQRcode="http://doub.pw/qr/qr.php?text=${SSurl}"
 	ss_link=" SS    链接 : ${Green_font_prefix}${SSurl}${Font_color_suffix} \n SS  二维码 : ${Green_font_prefix}${SSQRcode}${Font_color_suffix}"
 }
 ssr_link_qr(){
@@ -153,7 +153,7 @@ ssr_link_qr(){
 	SSRPWDbase64=$(urlsafe_base64 "${password}")
 	SSRbase64=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}")
 	SSRurl="ssr://${SSRbase64}"
-	SSRQRcode="http://zheyu.pw/qr/qr.php?text=${SSRurl}"
+	SSRQRcode="http://doub.pw/qr/qr.php?text=${SSRurl}"
 	ssr_link=" SSR   链接 : ${Red_font_prefix}${SSRurl}${Font_color_suffix} \n SSR 二维码 : ${Red_font_prefix}${SSRQRcode}${Font_color_suffix} \n "
 }
 ss_ssr_determine(){
@@ -247,9 +247,9 @@ Set_config_port(){
 	while true
 	do
 	echo -e "请输入要设置的ShadowsocksR账号 端口"
-	stty erase '^H' && read -p "(默认: 1234):" ssr_port
+	stty erase '^H' && read -p "(默认: 2333):" ssr_port
 	[[ -z "$ssr_port" ]] && ssr_port="2333"
-	expr ${ssr_port} + 0 &>/dev/1234
+	expr ${ssr_port} + 0 &>/dev/null
 	if [[ $? == 0 ]]; then
 		if [[ ${ssr_port} -ge 1 ]] && [[ ${ssr_port} -le 65535 ]]; then
 			echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
@@ -264,8 +264,8 @@ Set_config_port(){
 }
 Set_config_password(){
 	echo "请输入要设置的ShadowsocksR账号 密码"
-	stty erase '^H' && read -p "(默认: zheyu):" ssr_password
-	[[ -z "${ssr_password}" ]] && ssr_password="zheyu"
+	stty erase '^H' && read -p "(默认: doub.io):" ssr_password
+	[[ -z "${ssr_password}" ]] && ssr_password="doub.io"
 	echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_method(){
@@ -294,7 +294,7 @@ Set_config_method(){
  ${Green_font_prefix}16.${Font_color_suffix} chacha20-ietf
  ${Tip} salsa20/chacha20-*系列加密方式，需要额外安装依赖 libsodium ，否则会无法启动ShadowsocksR !" && echo
 	stty erase '^H' && read -p "(默认: 5. aes-128-ctr):" ssr_method
-	[[ -z "${ssr_method}" ]] && ssr_method="10"
+	[[ -z "${ssr_method}" ]] && ssr_method="5"
 	if [[ ${ssr_method} == "1" ]]; then
 		ssr_method="none"
 	elif [[ ${ssr_method} == "2" ]]; then
@@ -376,8 +376,8 @@ Set_config_obfs(){
  ${Green_font_prefix}4.${Font_color_suffix} random_head
  ${Green_font_prefix}5.${Font_color_suffix} tls1.2_ticket_auth
  ${Tip} 如果使用 ShadowsocksR 加速游戏，请选择 混淆兼容原版或 plain 混淆，然后客户端选择 plain，否则会增加延迟 !" && echo
-	stty erase '^H' && read -p "(默认: 1. tls1.2_ticket_auth):" ssr_obfs
-	[[ -z "${ssr_obfs}" ]] && ssr_obfs="1"
+	stty erase '^H' && read -p "(默认: 5. tls1.2_ticket_auth):" ssr_obfs
+	[[ -z "${ssr_obfs}" ]] && ssr_obfs="5"
 	if [[ ${ssr_obfs} == "1" ]]; then
 		ssr_obfs="plain"
 	elif [[ ${ssr_obfs} == "2" ]]; then
@@ -665,7 +665,7 @@ Installation_dependency(){
 	Check_python
 	#echo "nameserver 8.8.8.8" > /etc/resolv.conf
 	#echo "nameserver 8.8.4.4" >> /etc/resolv.conf
-	cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+	\cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 }
 Install_SSR(){
 	check_root
@@ -1211,7 +1211,7 @@ Configure_Server_Speeder(){
 Install_ServerSpeeder(){
 	[[ -e ${Server_Speeder_file} ]] && echo -e "${Error} 锐速(Server Speeder) 已安装 !" && exit 1
 	cd /root
-	#借用91yun.rog的开心版锐速
+	# 安装锐速 (借用91yun.rog的开心版锐速)
 	wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder.sh
 	[[ ! -e "serverspeeder.sh" ]] && echo -e "${Error} 锐速安装脚本下载失败 !" && exit 1
 	bash serverspeeder.sh
@@ -1226,6 +1226,7 @@ Install_ServerSpeeder(){
 		echo -e "${Error} 锐速(Server Speeder) 安装失败 !" && exit 1
 	fi
 }
+# 卸载锐速
 Uninstall_ServerSpeeder(){
 	echo "确定要卸载 锐速(Server Speeder)？[y/N]" && echo
 	stty erase '^H' && read -p "(默认: n):" unyn
@@ -1273,6 +1274,7 @@ Configure_LotServer(){
 		echo -e "${Error} 请输入正确的数字(1-6)" && exit 1
 	fi
 }
+# 安装Lot服务器
 Install_LotServer(){
 	[[ -e ${LotServer_file} ]] && echo -e "${Error} LotServer 已安装 !" && exit 1
 	#Github: https://github.com/0oVicero0/serverSpeeder_Install
@@ -1287,6 +1289,7 @@ Install_LotServer(){
 		echo -e "${Error} LotServer 安装失败 !" && exit 1
 	fi
 }
+# 卸载Lot服务器
 Uninstall_LotServer(){
 	echo "确定要卸载 LotServer？[y/N]" && echo
 	stty erase '^H' && read -p "(默认: n):" unyn
@@ -1296,7 +1299,7 @@ Uninstall_LotServer(){
 		echo && echo "LotServer 卸载完成 !" && echo
 	fi
 }
-# BBR
+# BBR加速
 Configure_BBR(){
 	echo && echo -e "  你要做什么？
 	
@@ -1411,6 +1414,7 @@ Set_config_connect_verbose_info(){
 		fi
 	fi
 }
+# 脚本更新
 Update_Shell(){
 	echo -e "当前版本为 [ ${sh_ver} ]，开始检测最新版本..."
 	sh_new_ver=$(wget --no-check-certificate -qO- "https://softs.loan/Bash/ssr.sh"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1) && sh_new_type="softs"
@@ -1454,12 +1458,13 @@ menu_status(){
 	fi
 }
 check_sys
-[[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
+[[ ${release} != "mac" ]] && [[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]]  && [[ ${release} != "windows" ]]  && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
+# 脚本选项
 echo -e "  ShadowsocksR 一键管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
-  ---- Toyo | doub.io/ss-jc42 ----
+  -------------------------------------------------------------------
 
-  ${Green_font_prefix}1.${Font_color_suffix} 安装 ShadowsocksR SS可兼容
-  ${Green_font_prefix}2.${Font_color_suffix} 更新 ShadowsocksR 
+  ${Green_font_prefix}1.${Font_color_suffix} 安装 ShadowsocksR
+  ${Green_font_prefix}2.${Font_color_suffix} 更新 ShadowsocksR
   ${Green_font_prefix}3.${Font_color_suffix} 卸载 ShadowsocksR
   ${Green_font_prefix}4.${Font_color_suffix} 安装 libsodium(chacha20)
 ————————————
@@ -1474,11 +1479,12 @@ echo -e "  ShadowsocksR 一键管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_
  ${Green_font_prefix}12.${Font_color_suffix} 重启 ShadowsocksR
  ${Green_font_prefix}13.${Font_color_suffix} 查看 ShadowsocksR 日志
 ————————————
- ${Green_font_prefix}14.${Font_color_suffix} 安装加速
+ ${Green_font_prefix}14.${Font_color_suffix} 其他功能
  ${Green_font_prefix}15.${Font_color_suffix} 升级脚本
  "
-menu_status
-echo && stty erase '^H' && read -p "请输入数字 [1-15]：" num
+# 操作命令栏
+ menu_status
+echo && stty erase '^H' && read -p "请输入数字 [1-16]：" num
 case "$num" in
 	1)
 	Install_SSR
@@ -1525,7 +1531,10 @@ case "$num" in
 	15)
 	Update_Shell
 	;;
+	16)
+	exit
+	;;
 	*)
-	echo -e "${Error} 请输入正确的数字 [1-15]"
+	echo -e "${Error} 请输入正确的数字 [1-16]"
 	;;
 esac
